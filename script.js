@@ -1,26 +1,4 @@
-const map = L.map('map'); // Nepoužíváme setView – použijeme fitBounds
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap'
-}).addTo(map);
-
-// Výchozí styl všech oblastí (modrá výplň, bílé okraje)
-function defaultStyle(feature) {
-  return {
-    fillColor: 'rgb(0,173,208)', // světle modrá
-    color: 'white',              // bílé ohraničení
-    weight: 2,
-    fillOpacity: 0.6
-  };
-}
-
-// Styl při najetí myší
-const hoverStyle = {
-  fillColor: 'rgb(0,60,105)',   // tmavě modrá
-  color: 'white',
-  weight: 2,
-  fillOpacity: 0.8
-};
+const map = L.map('map');
 
 fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/mapa_ostrava_barvy_29_05_2025.geojson')
   .then(response => {
@@ -30,34 +8,43 @@ fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/
     return response.json();
   })
   .then(data => {
-    const geojsonLayer = L.geoJSON(data, {
-      style: defaultStyle, // Nastavíme styl přímo, žádné getColor
+    const geojson = L.geoJSON(data, {
+      style: {
+        color: 'white', // hranice
+        weight: 2,
+        fillColor: 'rgb(0,173,208)', // výplň
+        fillOpacity: 0.6
+      },
       onEachFeature: (feature, layer) => {
+        // Popup s daty
         const props = feature.properties;
+        if (props) {
+          const obsah = `
+            <strong>${props.nazev || 'Neznámá oblast'}</strong><br>
+            Počet sportovišť: ${props.pocet_sportovist || 'Nezadáno'}<br>
+            Velikost: ${props.velikost || 'Nezadáno'}
+          `;
+          layer.bindPopup(obsah);
+        }
 
-        // Vyskakovací okno s daty
-        const popupContent = `
-          <strong>${props.nazev}</strong><br>
-          Počet sportovišť: ${props.pocet_sportovist || 'neuvedeno'}<br>
-          Velikost oblasti: ${props.velikost || 'neuvedeno'}
-        `;
-        layer.bindPopup(popupContent);
-
-        // Efekt hoveru
+        // Hover efekty
         layer.on({
-          mouseover: function (e) {
-            e.target.setStyle(hoverStyle);
-            e.target.bringToFront();
+          mouseover: (e) => {
+            e.target.setStyle({
+              fillColor: 'rgb(0,60,105)'
+            });
+            e.target.openPopup();
           },
-          mouseout: function (e) {
-            geojsonLayer.resetStyle(e.target);
+          mouseout: (e) => {
+            geojson.resetStyle(e.target);
+            e.target.closePopup();
           }
         });
       }
     }).addTo(map);
 
-    // Automatické přiblížení mapy na GeoJSON
-    map.fitBounds(geojsonLayer.getBounds());
+    // Přizpůsobení výřezu mapy podle dat
+    map.fitBounds(geojson.getBounds());
   })
   .catch(err => {
     console.error('Chyba při načítání GeoJSON:', err);

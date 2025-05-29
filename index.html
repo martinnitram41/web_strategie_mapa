@@ -1,76 +1,47 @@
+
 <!DOCTYPE html>
 <html lang="cs">
 <head>
   <meta charset="UTF-8" />
   <title>Interaktivní mapa Ostrava</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- Google Fonts Montserrat Bold 700 -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet" />
   <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-
+    /* Bíly pruh nahoře */
     #header {
       background: white;
-      color: rgb(0, 60, 105);
-      font-family: sans-serif;
-      font-weight: 700;
-      font-size: 36px;
-      padding: 14px 20px;
+      color: rgb(0,60,105);
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700; /* Bold */
+      font-size: 36px;   /* zvětšeno o 50% */
+      line-height: 50px;
+      height: 50px;
+      margin: 0;
+      padding: 0 20px;
       text-align: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       user-select: none;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+      border-bottom: 1px solid rgb(0,60,105);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25); /* výrazný stín */
     }
 
+    /* Výška mapy - zbytek viewportu */
     #map {
-      height: calc(100vh - 60px);
+      height: calc(100vh - 50px);
       width: 100%;
+      margin: 0;
+      padding: 0;
     }
 
-    #legend {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      background: white;
-      padding: 10px;
-      border-radius: 6px;
-      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-      font-size: 14px;
-      z-index: 999;
-    }
-
-    #legend div {
-      margin-bottom: 5px;
-    }
-
-    #legend span {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      margin-right: 6px;
-      vertical-align: middle;
-    }
-
-    #legend .default {
-      background-color: rgb(0, 173, 208);
-    }
-
-    #legend .hover {
-      background-color: rgb(0, 60, 105);
+    body {
+      margin: 0;
     }
   </style>
 </head>
 <body>
   <div id="header">interaktivní mapa sportovišť města Ostrava!!!</div>
   <div id="map"></div>
-
-  <!-- Legenda -->
-  <div id="legend">
-    <div><span class="default"></span> Výchozí oblast</div>
-    <div><span class="hover"></span> Zvýrazněná oblast</div>
-  </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="script.js"></script>

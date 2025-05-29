@@ -1,13 +1,33 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <title>Strategie mesta ostrava</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <title>Interaktivní mapa Ostrava</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    /* Bíly pruh nahoře */
+    #header {
+      background: white;
+      color: rgb(0,60,105);
+      font-family: 'Gotham Medium', sans-serif;
+      font-weight: 500; /* Medium */
+      font-size: 24px;
+      padding: 10px 20px;
+      text-align: center;
+      user-select: none;
+    }
+
+    /* Výška mapy - zbytek viewportu */
+    #map {
+      height: calc(100vh - 50px); /* pokud header má cca 50px */
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
+  <div id="header">interaktivní mapa sportovišť města Ostrava!!!</div>
   <div id="map"></div>
+
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="script.js"></script>
 </body>

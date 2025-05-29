@@ -4,23 +4,37 @@
   <meta charset="UTF-8" />
   <title>Interaktivní mapa Ostrava</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <!-- Přidání Google Fonts Montserrat (Medium 500) -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet" />
   <style>
     /* Bíly pruh nahoře */
     #header {
       background: white;
       color: rgb(0,60,105);
-      font-family: 'Gotham Medium', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       font-weight: 500; /* Medium */
       font-size: 24px;
-      padding: 10px 20px;
+      line-height: 40px;   /* Výška pruhu */
+      height: 40px;        /* Přesná výška pruhu */
+      margin: 0;
+      padding: 0 20px;
       text-align: center;
       user-select: none;
+      box-sizing: border-box;
+      border-bottom: 1px solid rgb(0,60,105); /* lehký oddělovač pruhu od mapy */
     }
 
     /* Výška mapy - zbytek viewportu */
     #map {
-      height: calc(100vh - 50px); /* pokud header má cca 50px */
+      height: calc(100vh - 40px); /* výška viewportu minus header */
       width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Odstranění defaultního marginu těla */
+    body {
+      margin: 0;
     }
   </style>
 </head>

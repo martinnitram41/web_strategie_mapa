@@ -5,7 +5,12 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/mapa_ostrava_barvy_29_05_2025.geojson')
-  .then(res => res.json())
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
   .then(data => {
     L.geoJSON(data, {
       style: feature => ({
@@ -19,6 +24,9 @@ fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/
         }
       }
     }).addTo(map);
+  })
+  .catch(err => {
+    console.error('Chyba při načítání GeoJSON:', err);
   });
 
 function getColor(typ) {

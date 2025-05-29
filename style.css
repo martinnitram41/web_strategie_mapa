@@ -2,7 +2,9 @@ html, body {
   height: 100%;
   margin: 0;
 }
-#map {
-  height: 100vh;
+  #map {
+  height: 500px; /* nebo jiná výška */
   width: 100%;
+}
+
 }

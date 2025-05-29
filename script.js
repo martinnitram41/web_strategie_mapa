@@ -5,7 +5,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Načtení GeoJSON dat
-fetch('data.geojson')
+fetch('mapa_ostrava_barvy_29_05_2025')
   .then(res => res.json())
   .then(data => {
     L.geoJSON(data, {

@@ -1,24 +1,24 @@
-const map = L.map('map'); // Bez setView, použijeme fitBounds
+const map = L.map('map'); // Nepoužíváme setView – použijeme fitBounds
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap'
 }).addTo(map);
 
-// Výchozí styl zón
+// Výchozí styl všech oblastí (modrá výplň, bílé okraje)
 function defaultStyle(feature) {
   return {
-    fillColor: 'rgb(0,173,208)', // modrá výplň
+    fillColor: 'rgb(0,173,208)', // světle modrá
     color: 'white',              // bílé ohraničení
     weight: 2,
     fillOpacity: 0.6
   };
 }
 
-// Styl při hoveru
+// Styl při najetí myší
 const hoverStyle = {
-  fillColor: 'rgb(0,60,105)',  // tmavě modrá
-  weight: 2,
+  fillColor: 'rgb(0,60,105)',   // tmavě modrá
   color: 'white',
+  weight: 2,
   fillOpacity: 0.8
 };
 
@@ -31,11 +31,11 @@ fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/
   })
   .then(data => {
     const geojsonLayer = L.geoJSON(data, {
-      style: defaultStyle,
+      style: defaultStyle, // Nastavíme styl přímo, žádné getColor
       onEachFeature: (feature, layer) => {
         const props = feature.properties;
 
-        // Popup s daty
+        // Vyskakovací okno s daty
         const popupContent = `
           <strong>${props.nazev}</strong><br>
           Počet sportovišť: ${props.pocet_sportovist || 'neuvedeno'}<br>
@@ -43,11 +43,11 @@ fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/
         `;
         layer.bindPopup(popupContent);
 
-        // Hover efekty
+        // Efekt hoveru
         layer.on({
           mouseover: function (e) {
             e.target.setStyle(hoverStyle);
-            e.target.bringToFront(); // zóna jde nahoru
+            e.target.bringToFront();
           },
           mouseout: function (e) {
             geojsonLayer.resetStyle(e.target);
@@ -56,7 +56,7 @@ fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/
       }
     }).addTo(map);
 
-    // Přiblížení podle dat
+    // Automatické přiblížení mapy na GeoJSON
     map.fitBounds(geojsonLayer.getBounds());
   })
   .catch(err => {

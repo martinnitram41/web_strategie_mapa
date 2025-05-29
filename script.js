@@ -1,8 +1,26 @@
-const map = L.map('map').setView([49.75, 15.5], 7); // ČR střed
+const map = L.map('map'); // Bez setView, použijeme fitBounds
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '&copy; OpenStreetMap'
 }).addTo(map);
+
+// Výchozí styl zón
+function defaultStyle(feature) {
+  return {
+    fillColor: 'rgb(0,173,208)', // modrá výplň
+    color: 'white',              // bílé ohraničení
+    weight: 2,
+    fillOpacity: 0.6
+  };
+}
+
+// Styl při hoveru
+const hoverStyle = {
+  fillColor: 'rgb(0,60,105)',  // tmavě modrá
+  weight: 2,
+  color: 'white',
+  fillOpacity: 0.8
+};
 
 fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/mapa_ostrava_barvy_29_05_2025.geojson')
   .then(response => {
@@ -12,28 +30,35 @@ fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/
     return response.json();
   })
   .then(data => {
-    L.geoJSON(data, {
-      style: feature => ({
-        color: getColor(feature.properties.typ),
-        weight: 2,
-        fillOpacity: 0.6
-      }),
+    const geojsonLayer = L.geoJSON(data, {
+      style: defaultStyle,
       onEachFeature: (feature, layer) => {
-        if (feature.properties && feature.properties.nazev) {
-          layer.bindPopup(feature.properties.nazev);
-        }
+        const props = feature.properties;
+
+        // Popup s daty
+        const popupContent = `
+          <strong>${props.nazev}</strong><br>
+          Počet sportovišť: ${props.pocet_sportovist || 'neuvedeno'}<br>
+          Velikost oblasti: ${props.velikost || 'neuvedeno'}
+        `;
+        layer.bindPopup(popupContent);
+
+        // Hover efekty
+        layer.on({
+          mouseover: function (e) {
+            e.target.setStyle(hoverStyle);
+            e.target.bringToFront(); // zóna jde nahoru
+          },
+          mouseout: function (e) {
+            geojsonLayer.resetStyle(e.target);
+          }
+        });
       }
     }).addTo(map);
+
+    // Přiblížení podle dat
+    map.fitBounds(geojsonLayer.getBounds());
   })
   .catch(err => {
     console.error('Chyba při načítání GeoJSON:', err);
   });
-
-function getColor(typ) {
-  switch(typ) {
-    case 'les': return '#228B22';
-    case 'voda': return '#1E90FF';
-    case 'louka': return '#ADFF2F';
-    default: return '#FF8C00';
-  }
-}

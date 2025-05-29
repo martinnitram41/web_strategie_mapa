@@ -6,5 +6,13 @@ html, body {
   height: 500px; /* nebo jiná výška */
   width: 100%;
 }
+.clicked-feature {
+  animation: pulse 0.8s;
+}
 
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
 }

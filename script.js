@@ -1,6 +1,12 @@
+// Inicializace mapy s výchozím pohledem
+const map = L.map('map').setView([49.75, 15.5], 7); // ČR
 
-const map = L.map('map');
+// Přidání podkladové mapy
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap'
+}).addTo(map);
 
+// Načtení GeoJSON dat z GitHubu
 fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/mapa_ostrava_barvy_29_05_2025.geojson')
   .then(response => {
     if (!response.ok) {
@@ -17,7 +23,6 @@ fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/
         fillOpacity: 0.6
       },
       onEachFeature: (feature, layer) => {
-        // Popup s daty
         const props = feature.properties;
         if (props) {
           const obsah = `
@@ -28,12 +33,9 @@ fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/
           layer.bindPopup(obsah);
         }
 
-        // Hover efekty
         layer.on({
           mouseover: (e) => {
-            e.target.setStyle({
-              fillColor: 'rgb(0,60,105)'
-            });
+            e.target.setStyle({ fillColor: 'rgb(0,60,105)' });
             e.target.openPopup();
           },
           mouseout: (e) => {
@@ -44,8 +46,7 @@ fetch('https://raw.githubusercontent.com/martinnitram41/web_strategie_mapa/main/
       }
     }).addTo(map);
 
-    // Přizpůsobení výřezu mapy podle dat
-    map.fitBounds(geojson.getBounds());
+    map.fitBounds(geojson.getBounds()); // výřez mapy podle dat
   })
   .catch(err => {
     console.error('Chyba při načítání GeoJSON:', err);
